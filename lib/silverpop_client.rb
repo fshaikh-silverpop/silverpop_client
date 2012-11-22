@@ -6,5 +6,8 @@ require "silverpop_client/xml_generators"
 
 module SilverpopClient
   extend Configuration
-  extend XmlGenerators
+
+  class Client
+    include XmlGenerators
+  end
 end

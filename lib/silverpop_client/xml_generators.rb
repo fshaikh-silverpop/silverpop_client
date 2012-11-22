@@ -1,3 +1,5 @@
+require 'builder'
+
 module SilverpopClient
   module XmlGenerators
     def xml_base(&block)
