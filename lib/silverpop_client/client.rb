@@ -1,10 +1,17 @@
+require 'net/http'
+
 module SilverpopClient
   class Client
-    def initialize
-#      @http = Net::HTTP.new(@silverpop_url, @silverpop_port)
+    def initialize(username, password)
+      @username = username
+      @password = password
+
+      @http = Net::HTTP.new(SilverpopClient.silverpop_url, SilverpopClient.silverpop_port)
+
       @headers = {
-        "Host" => @silverpop_url
+        "Host" => SilverpopClient.silverpop_url
       }
+
       @silverpop_session_id = nil
       @silverpop_session_encoding = nil
 

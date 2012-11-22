@@ -10,7 +10,7 @@ module SilverpopClient
     #  November%2019,%202010
     def self.format(date)
       if date
-        date.send(:strftime, "%B%%20%d,%%20%Y")
+        date.strftime("%B%%20%d,%%20%Y")
       else
         nil
       end

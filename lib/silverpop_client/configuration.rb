@@ -1,6 +1,6 @@
 module SilverpopClient
   module Configuration
-    VALID_CONNECTION_KEYS =       [:username, :password].freeze
+    VALID_CONNECTION_KEYS =       [].freeze
     VALID_OPTIONS_KEYS =          [:silverpop_url, :silverpop_port, :silverpop_path, :silverpop_list_id, :silverpop_ftp_server, :silverpop_ftp_port].freeze
     VALID_CONFIG_KEYS =           VALID_CONNECTION_KEYS + VALID_OPTIONS_KEYS
 
@@ -26,9 +26,6 @@ module SilverpopClient
     end
 
     def reset
-      self.username = DEFAULT_SILVERPOP_USERNAME
-      self.password = DEFAULT_SILVERPOP_PASSWORD
-
       self.silverpop_url = DEFAULT_SILVERPOP_URL
       self.silverpop_path = DEFAULT_SILVERPOP_PATH
       self.silverpop_port = DEFAULT_SILVERPOP_PORT

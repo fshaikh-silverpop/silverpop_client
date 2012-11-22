@@ -6,7 +6,7 @@ describe SilverpopClient do
   end
 
   it 'should instantiate' do
-    sc = SilverpopClient::Client.new
+    sc = SilverpopClient::Client.new("test", "test")
     sc.should_not be nil
   end
 end
