@@ -24,19 +24,18 @@ describe SilverpopClient do
     end
 
     it 'should be able to login and out' do
-      @client.login
-      @logout_request = @client.xml_for_logout
       @login_request = @client.xml_for_login("test", "test")
+      @logout_request = @client.xml_for_logout
 
-      @client.should_receive(:post_to_silverpop_api).with(login_request).once.and_return(successful_login_xml)
-      client.should_receive(:post_to_silverpop_engage_api).with(logout_request).once.and_return(successful_logout_xml)
+      @client.should_receive(:post_to_silverpop_api).with(@login_request).once.and_return(successful_login_xml)
+      @client.should_receive(:post_to_silverpop_engage_api).with(@logout_request).once.and_return(successful_logout_xml)
 
-      result = client.login(creds[:login], creds[:password])
-      client.result_successful?(result).should be_true
-      client.should be_logged_in
+      result = @client.login
+#      @client.result_successful?(result).should be_true
+      @client.logged_in?.should == true
 
-      client.logout
-      client.should_not be_logged_in
+      @client.logout
+      @client.logged_in?.should be_false
     end
 
 
