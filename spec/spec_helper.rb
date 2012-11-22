@@ -1,0 +1,1 @@
+require 'silverpop_client'
