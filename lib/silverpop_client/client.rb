@@ -1,10 +1,8 @@
 require 'net/http'
 require 'hpricot'
-require "silverpop_client/xml_generators"
 
 module SilverpopClient
   class Client
-    include XmlGenerators
 
     def initialize
       @http = Net::HTTP.new(SilverpopClient.silverpop_api_url, SilverpopClient.silverpop_api_port)
@@ -20,7 +18,7 @@ module SilverpopClient
     # Returns an array of contact hashes for all contacts that were successfully updated
 
     def update_contacts(array_of_contact_hashes)
-      response_xml = post_to_silverpop_api(xml_for_add_recipient(array_of_contact_hashes))
+      response_xml = post_to_silverpop_api(XmlGenerators.xml_for_add_recipient(array_of_contact_hashes))
 
       successfully_updated = []
 

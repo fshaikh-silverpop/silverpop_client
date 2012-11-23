@@ -20,8 +20,8 @@ describe SilverpopClient::EngageApiClient do
     end
 
     it 'should be able to login and logout' do
-      login_request_xml = @client.xml_for_login("test", "test")
-      logout_request_xml = @client.xml_for_logout
+      login_request_xml = SilverpopClient::XmlGenerators.xml_for_login("test", "test")
+      logout_request_xml = SilverpopClient::XmlGenerators.xml_for_logout
 
       @client.should_receive(:post_to_silverpop_api).with(login_request_xml).once.and_return(successful_login_xml)
       @client.should_receive(:post_to_silverpop_engage_api).with(logout_request_xml).once.and_return(successful_logout_xml)
@@ -40,7 +40,7 @@ describe SilverpopClient::EngageApiClient do
     end
 
     it 'should send the request correctly' do
-      report_request_xml = @client.xml_for_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2))
+      report_request_xml = SilverpopClient::XmlGenerators.xml_for_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2))
 
       @client.should_receive(:login).once.and_return("logged_in_string")
       @client.should_receive(:post_to_silverpop_engage_api).with(report_request_xml).once.and_return(successful_request_raw_recipient_export_response_xml)

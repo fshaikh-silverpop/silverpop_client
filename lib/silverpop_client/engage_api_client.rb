@@ -21,14 +21,14 @@ module SilverpopClient
 
     def login
       SilverpopClient.logger.info("Attempting to log in to silverpop with #{@username}...")
-      SilverpopClient.logger.info("Sending #{xml_for_login(@username, @password)}")
+      SilverpopClient.logger.info("Sending #{XmlGenerators.xml_for_login(@username, @password)}")
 
       if logged_in?
         SilverpopClient.logger.info("Trying to login when already logged in...")
         return true
       end
 
-      result = post_to_silverpop_api(xml_for_login(@username, @password))
+      result = post_to_silverpop_api(XmlGenerators.xml_for_login(@username, @password))
 
       if result_successful?(result)
         SilverpopClient.logger.info("Successfully logged in to silverpop.")
@@ -44,7 +44,7 @@ module SilverpopClient
 
     def logout
       SilverpopClient.logger.info("Attempting to log out from silverpop...")
-      result = post_to_silverpop_engage_api(xml_for_logout)
+      result = post_to_silverpop_engage_api(XmlGenerators.xml_for_logout)
       if result_successful?(result)
         SilverpopClient.logger.info("Successfully logged out.")
         @silverpop_session_id = nil
@@ -69,7 +69,7 @@ module SilverpopClient
       begin
         login unless logged_in?
 
-        result = post_to_silverpop_engage_api(xml_for_raw_recipient_data_export(start_date, end_date))
+        result = post_to_silverpop_engage_api(XmlGenerators.xml_for_raw_recipient_data_export(start_date, end_date))
         if result_successful?(result)
           filename = Hpricot(result).search("/Envelope/Body/RESULT/MAILING/FILE_PATH").inner_text
           data_job_ids << Hpricot(result).search("/Envelope/Body/RESULT/MAILING/JOB_ID").inner_text

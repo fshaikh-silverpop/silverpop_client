@@ -18,7 +18,7 @@ describe SilverpopClient do
   describe '.update_contacts' do
     before :all do
       @client = SilverpopClient::Client.new
-      @update_xml = @client.xml_for_add_recipient(sample_array_of_contact_hashes)
+      @update_xml = SilverpopClient::XmlGenerators.xml_for_add_recipient(sample_array_of_contact_hashes)
     end
 
     it 'should correctly build the XML' do
