@@ -67,7 +67,7 @@ module SilverpopClient
              error_indices << i
              error_string = faults.shift.inner_text
              request = Hpricot(xml).search("//#{operation}")[i]
-             error("-------\nError! #{error_string}\nRequest:\n#{request.to_s}\n-------\n")
+             SilverpopClient.logger.error("-------\nError! #{error_string}\nRequest:\n#{request.to_s}\n-------\n")
            end
         end
       end
