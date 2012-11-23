@@ -1,3 +1,5 @@
+require 'logger'
+
 module SilverpopClient
   module Configuration
     VALID_CONNECTION_KEYS =       [].freeze
@@ -35,7 +37,7 @@ module SilverpopClient
       self.silverpop_ftp_port = DEFAULT_SILVERPOP_FTP_PORT
 
       # If used from within a Rails application, you might want to set the logger to Rails.logger
-      self.logger = BasicLogger.new
+      self.logger = Logger.new(STDERR)
     end
   end
 end

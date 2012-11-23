@@ -59,6 +59,7 @@ module SilverpopClient
 
       begin
         login unless logged_in?
+
         result = post_to_silverpop_engage_api(xml_for_raw_recipient_data_export(start_date, end_date))
         if result_successful?(result)
           filename = Hpricot(result).search("/Envelope/Body/RESULT/MAILING/FILE_PATH").inner_text
