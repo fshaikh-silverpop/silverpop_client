@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe SilverpopClient do
+  before :all do
+    SilverpopClient.reset
+  end
+
   it 'should have a version' do
     SilverpopClient::VERSION.should_not be_nil
   end
@@ -19,7 +23,7 @@ describe SilverpopClient do
       @client.logged_in?.should == false
     end
 
-    it 'should be able to login and out' do
+    it 'should be able to login and logout' do
       @login_request = @client.xml_for_login("test", "test")
       @logout_request = @client.xml_for_logout
 
