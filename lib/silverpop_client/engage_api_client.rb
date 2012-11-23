@@ -1,5 +1,8 @@
+require "silverpop_client/ftp_retrieval"
+
 module SilverpopClient
   class EngageApiClient < Client
+    include FtpRetrieval
 
     attr_accessor :data_job_ids
 

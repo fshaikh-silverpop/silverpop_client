@@ -1,8 +1,11 @@
 require 'net/http'
 require 'hpricot'
+require "silverpop_client/xml_generators"
 
 module SilverpopClient
   class Client
+    include XmlGenerators
+
     def initialize
       @http = Net::HTTP.new(SilverpopClient.silverpop_api_url, SilverpopClient.silverpop_api_port)
 
