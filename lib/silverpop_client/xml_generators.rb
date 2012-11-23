@@ -24,16 +24,16 @@ module SilverpopClient
       }
     end
 
-    def xml_for_add_recipient(users)
-      users = users.is_a?(Array) ? users : [users]
+    def xml_for_add_recipient(array_of_contact_hashes)
+      array_of_contact_hashes = array_of_contact_hashes.is_a?(Array) ? array_of_contact_hashes : [array_of_contact_hashes]
 
       xml_base {|xml|
-        users.each do |user|
+        array_of_contact_hashes.each do |contact|
           xml.AddRecipient {
             list_id(xml)
             xml.CREATED_FROM("1")
             xml.UPDATE_IF_FOUND("true")
-            name_value_pairs_for_user(user).each do |key, value|
+            contact.each do |key, value|
               xml.COLUMN {
                 xml.NAME {
                   xml.cdata!(key)
