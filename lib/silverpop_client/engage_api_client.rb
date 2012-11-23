@@ -1,8 +1,5 @@
-require "silverpop_client/ftp_retrieval"
-
 module SilverpopClient
   class EngageApiClient < Client
-    include FtpRetrieval
 
     attr_accessor :data_job_ids
 
@@ -94,7 +91,7 @@ module SilverpopClient
 
     def request_and_retrieve_raw_recipient_data_export_report(start_date, end_date, output_path)
       filename = request_raw_recipient_data_export(start_date, end_date)
-      download_report_from_silverpop_ftp(@username, @password, filename, output_path)
+      FtpRetrieval.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
     end
 
     private

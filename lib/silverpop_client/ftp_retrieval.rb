@@ -1,13 +1,13 @@
 require 'net/sftp'
 
 module SilverpopClient
-  module FtpRetrieval
+  class FtpRetrieval
 
     ##
     # Attempts to download +report_filename+ from the configured silverpop_ftp_path in the SilverpopClient gem
     # Returns the path to the downloaded file
 
-    def download_report_from_silverpop_ftp(silverpop_login, silverpop_password, report_filename, output_path)
+    def self.download_report_from_silverpop_ftp(silverpop_login, silverpop_password, report_filename, output_path)
       remote_file = SilverpopClient.silverpop_ftp_path + "/" + report_filename
       local_filename = File.join(output_path, "#{report_filename}")
 
