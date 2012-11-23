@@ -10,13 +10,6 @@ module SilverpopClient
       @headers = {
         "Host" => SilverpopClient.silverpop_url
       }
-
-      @silverpop_session_id = nil
-      @silverpop_session_encoding = nil
-
-      @data_job_ids = []
-
-      @error_reporting = :stderr
     end
 
     private

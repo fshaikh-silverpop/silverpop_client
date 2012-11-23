@@ -48,6 +48,7 @@ describe SilverpopClient::EngageApiClient do
 
       filename = @client.request_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2))
       filename.should == "15167_20041213100410_track.zip"
+      @client.data_job_ids.should == ["72649"]
     end
   end
 end
