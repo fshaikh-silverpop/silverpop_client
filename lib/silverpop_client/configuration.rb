@@ -3,7 +3,15 @@ require 'logger'
 module SilverpopClient
   module Configuration
     VALID_CONNECTION_KEYS =       [].freeze
-    VALID_OPTIONS_KEYS =          [:silverpop_url, :silverpop_port, :silverpop_path, :silverpop_list_id, :silverpop_ftp_server, :silverpop_ftp_port, :logger].freeze
+    VALID_OPTIONS_KEYS =          [ :silverpop_url,
+                                    :silverpop_port,
+                                    :silverpop_path,
+                                    :silverpop_list_id,
+                                    :silverpop_ftp_server,
+                                    :silverpop_ftp_port,
+                                    :silverpop_ftp_path,
+                                    :logger ].freeze
+
     VALID_CONFIG_KEYS =           VALID_CONNECTION_KEYS + VALID_OPTIONS_KEYS
 
     attr_accessor *VALID_CONFIG_KEYS
@@ -18,6 +26,7 @@ module SilverpopClient
     DEFAULT_SILVERPOP_LIST_ID =   nil
     DEFAULT_SILVERPOP_FTP_SERVER = "transfer3.silverpop.com"
     DEFAULT_SILVERPOP_FTP_PORT =  22
+    DEFAULT_SILVERPOP_FTP_PATH =  '/download'
 
     def configure
       yield self
@@ -28,16 +37,17 @@ module SilverpopClient
     end
 
     def reset
-      self.silverpop_url = DEFAULT_SILVERPOP_URL
-      self.silverpop_path = DEFAULT_SILVERPOP_PATH
-      self.silverpop_port = DEFAULT_SILVERPOP_PORT
+      self.silverpop_url =        DEFAULT_SILVERPOP_URL
+      self.silverpop_path =       DEFAULT_SILVERPOP_PATH
+      self.silverpop_port =       DEFAULT_SILVERPOP_PORT
 
-      self.silverpop_list_id = DEFAULT_SILVERPOP_LIST_ID
+      self.silverpop_list_id =    DEFAULT_SILVERPOP_LIST_ID
       self.silverpop_ftp_server = DEFAULT_SILVERPOP_FTP_SERVER
-      self.silverpop_ftp_port = DEFAULT_SILVERPOP_FTP_PORT
+      self.silverpop_ftp_port =   DEFAULT_SILVERPOP_FTP_PORT
+      self.silverpop_ftp_path =   DEFAULT_SILVERPOP_FTP_PATH
 
       # If used from within a Rails application, you might want to set the logger to Rails.logger
-      self.logger = Logger.new(STDERR)
+      self.logger =               Logger.new(STDERR)
     end
   end
 end

@@ -1,5 +1,6 @@
 module SilverpopClient
   class EngageApiClient < Client
+
     attr_accessor :data_job_ids
 
     def initialize(username, password)
@@ -58,6 +59,7 @@ module SilverpopClient
     ##
     # Submits a raw recipient report request to silverpop from +start_date+ to +end_date+
     # Returns the filename
+    # Populates the job id in data_job_ids
 
     def request_raw_recipient_data_export(start_date, end_date)
       filename = nil
@@ -72,7 +74,7 @@ module SilverpopClient
           filename = Hpricot(result).search("/Envelope/Body/RESULT/MAILING/FILE_PATH").inner_text
           data_job_ids << Hpricot(result).search("/Envelope/Body/RESULT/MAILING/JOB_ID").inner_text
 
-          SilverpopClient.logger.info("Successfully requested raw recipient export from #{start_date} to #{end_date}; filename returned is #{filename}...")
+          SilverpopClient.logger.info("Successfully requested raw recipient export from #{start_date} to #{end_date}; filename returned is #{filename}, job_id is #{data_job_ids.last}...")
         else
           raise "Error requesting silverpop report, result is #{result.pretty_inspect}..."
         end
