@@ -18,6 +18,8 @@ module SilverpopClient
       @silverpop_session_id = nil
       @silverpop_session_encoding = nil
 
+      @data_job_ids = []
+
       @error_reporting = :stderr
     end
 
@@ -48,14 +50,6 @@ module SilverpopClient
       end
     end
 
-    def post_to_silverpop_engage_api(data)
-      raise "Not logged in!" unless logged_in?
-      SilverpopClient.logger.debug("XML for silverpop request:\n#{data}")
-
-      silverpop_path = @silverpop_session_encoding ? @silverpop_path + @silverpop_session_encoding : @silverpop_path
-      post(silverpop_path, data)
-    end
-
     def logout
       SilverpopClient.logger.info("Attempting to log out from silverpop...")
       result = post_to_silverpop_engage_api(xml_for_logout)
@@ -77,8 +71,6 @@ module SilverpopClient
     def request_raw_recipient_data_export(start_date, end_date)
       filename = nil
 
-      start_date = start_date.to_date
-      end_date = end_date.to_date
       SilverpopClient.logger.info("Requesting raw recipient data export from silverpop from #{start_date} to #{end_date}...")
 
       begin
@@ -90,14 +82,26 @@ module SilverpopClient
         else
           raise "Error requesting silverpop report, result is #{result.pretty_inspect}..."
         end
-        filename
       ensure
         logout
       end
-      result
+
+      filename
     end
 
     private
+
+    def post_to_silverpop_api(data)
+      post(@silverpop_path, data)
+    end
+
+    def post_to_silverpop_engage_api(data)
+      raise "Must be logged in to post to the engage API!" unless logged_in?
+      SilverpopClient.logger.debug("XML for silverpop request:\n#{data}")
+
+      silverpop_path = @silverpop_session_encoding ? @silverpop_path + @silverpop_session_encoding : @silverpop_path
+      post(silverpop_path, data)
+    end
 
     def result_successful?(result)
       Hpricot(result).search("/Envelope/Body/RESULT/SUCCESS").inner_text =~ /^TRUE$/i ? true : false
@@ -109,12 +113,11 @@ module SilverpopClient
       begin
         raise 'Silverpop path not set!' if path.blank?
         @headers["Content-length"] = data.size.to_s
-        Rails.logger.info("Posting #{data} to #{path}")
+        SilverpopClient.logger.debug("Posting #{data} to #{path}")
         response = @http.start {|http| http.post(path, "xml=#{data}", @headers) }
         response.body
       rescue Exception => ex
-        Rails.logger.error("post_to_silverpop_api exception!\n#{ex}")
-        error("-------\nError! exception: #{ex}\n")
+        SilverpopClient.logger.error("post_to_silverpop_api exception!\n#{ex}")
         nil
       end
     end

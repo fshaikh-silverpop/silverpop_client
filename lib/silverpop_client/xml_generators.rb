@@ -9,7 +9,7 @@ module SilverpopClient
     end
 
     def list_id(xml)
-      xml.LIST_ID(!ENV["SILVERPOP_LIST"].blank? ? ENV["SILVERPOP_LIST"] : API_PARAMS[:silverpop_list])
+      @silverpop_list_id
     end
 
     def xml_for_opt_out_recipient(email)
