@@ -9,7 +9,8 @@ module SilverpopClient
     end
 
     def list_id(xml)
-      @silverpop_list_id
+      raise "No list id configured." unless SilverpopClient.silverpop_list_id
+      SilverpopClient.silverpop_list_id
     end
 
     def xml_for_opt_out_recipient(email)

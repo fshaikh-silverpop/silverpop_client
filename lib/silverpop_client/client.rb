@@ -5,17 +5,17 @@ module SilverpopClient
   class Client
 
     def initialize
-      @http = Net::HTTP.new(SilverpopClient.silverpop_url, SilverpopClient.silverpop_port)
+      @http = Net::HTTP.new(SilverpopClient.silverpop_api_url, SilverpopClient.silverpop_api_port)
 
       @headers = {
-        "Host" => SilverpopClient.silverpop_url
+        "Host" => SilverpopClient.silverpop_api_url
       }
     end
 
     private
 
     def post_to_silverpop_api(data)
-      post(@silverpop_path, data)
+      post(SilverpopClient.silverpop_api_url, data)
     end
 
     def result_successful?(result)
@@ -23,7 +23,7 @@ module SilverpopClient
     end
 
     def post(path, data)
-      return if self.class.disabled?("didn't post #{data} to #{path}")
+#      return if self.class.disabled?("didn't post #{data} to #{path}")
 
       begin
         raise 'Silverpop path not set!' if path.blank?

@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = SilverpopClient::VERSION
   s.authors     = ["Arthur Purvis"]
   s.email       = ["apurvis@lumoslabs.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "http://www.lumosity.com"
+  s.summary     = %q{Provides a ruby interface to the Silverpop Engage 3 XML APIs}
+  s.description = %q{Provides a ruby interface to the Silverpop Engage 3 XML APIs}
 
   s.rubyforge_project = "silverpop_client"
 

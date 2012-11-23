@@ -100,7 +100,7 @@ module SilverpopClient
       raise "Must be logged in to post to the engage API!" unless logged_in?
       SilverpopClient.logger.debug("XML for silverpop request:\n#{data}")
 
-      silverpop_path = @silverpop_session_encoding ? @silverpop_path + @silverpop_session_encoding : @silverpop_path
+      silverpop_path = @silverpop_session_encoding ? SilverpopClient.silverpop_api_path + @silverpop_session_encoding : SilverpopClient.silverpop_api_path
       post(silverpop_path, data)
     end
   end
