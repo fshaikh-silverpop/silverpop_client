@@ -85,6 +85,15 @@ module SilverpopClient
       filename
     end
 
+    ##
+    # Creates the request for the data export
+    # Returns the full path of the downloaded file
+
+    def request_and_retrieve_raw_recipient_data_export_report(start_date, end_date, output_path)
+      filename = request_raw_recipient_data_export(start_date, end_date)
+      download_report_from_silverpop_ftp(@username, @password, filename, output_path)
+    end
+
     private
 
     def post_to_silverpop_engage_api(data)
