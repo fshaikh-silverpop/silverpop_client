@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe SilverpopClient do
-  before :all do
-    SilverpopClient.logger = TestLogger
-  end
-
   it 'should have a version' do
     SilverpopClient::VERSION.should_not be_nil
   end
@@ -31,15 +27,16 @@ describe SilverpopClient do
       @client.should_receive(:post_to_silverpop_engage_api).with(@logout_request).once.and_return(successful_logout_xml)
 
       result = @client.login
-#      @client.result_successful?(result).should be_true
       @client.logged_in?.should == true
 
       @client.logout
       @client.logged_in?.should be_false
     end
+  end
 
-
-    it 'should logout successfully' do
+  describe '.request_raw_recipient_report' do
+    it 'should send the request correctly' do
     end
   end
+
 end

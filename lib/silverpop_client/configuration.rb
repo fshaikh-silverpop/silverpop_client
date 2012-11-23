@@ -34,7 +34,8 @@ module SilverpopClient
       self.silverpop_ftp_server = DEFAULT_SILVERPOP_FTP_SERVER
       self.silverpop_ftp_port = DEFAULT_SILVERPOP_FTP_PORT
 
-      self.logger = nil
+      # If used from within a Rails application, you might want to set the logger to Rails.logger
+      self.logger = BasicLogger.new
     end
   end
 end
