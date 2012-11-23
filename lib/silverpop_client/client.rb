@@ -15,7 +15,7 @@ module SilverpopClient
     private
 
     def post_to_silverpop_api(data)
-      post(SilverpopClient.silverpop_api_url, data)
+      post(SilverpopClient.silverpop_api_path, data)
     end
 
     def result_successful?(result)
