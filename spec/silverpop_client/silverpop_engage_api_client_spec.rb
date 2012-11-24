@@ -36,7 +36,9 @@ describe SilverpopClient::EngageApiClient do
 
   describe '.request_raw_recipient_report' do
     before :all do
-      @client = SilverpopClient::EngageApiClient.new("test", "test")
+      @test_username = "test"
+      @test_password = "test"
+      @client = SilverpopClient::EngageApiClient.new(@test_username, @test_password)
     end
 
     it 'should send the request correctly' do
@@ -49,6 +51,14 @@ describe SilverpopClient::EngageApiClient do
       filename = @client.request_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2))
       filename.should == "15167_20041213100410_track.zip"
       @client.data_job_ids.should == ["72649"]
+    end
+
+    it 'should attempt the download' do
+      download_args = [@test_username, @test_password, "some_filename.zip", "/data"]
+      @client.should_receive(:request_raw_recipient_data_export).and_return("some_filename.zip")
+      SilverpopClient::FtpRetrieval.should_receive(:download_report_from_silverpop_ftp).with(*download_args).and_return("/data/some_filename.zip")
+
+      @client.request_and_retrieve_raw_recipient_data_export_report(Date.new(2012,5,1), Date.new(2012,5,1), "/data")
     end
   end
 end
