@@ -8,7 +8,7 @@ module SilverpopClient
     # Returns the path to the downloaded file
 
     def self.download_report_from_silverpop_ftp(silverpop_login, silverpop_password, report_filename, output_path)
-      remote_file = SilverpopClient.silverpop_ftp_path + "/" + report_filename
+      remote_file = File.join(SilverpopClient.silverpop_ftp_path, report_filename)
       local_filename = File.join(output_path, "#{report_filename}")
 
       retries = 10
