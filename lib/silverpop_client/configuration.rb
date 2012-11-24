@@ -2,8 +2,7 @@ require 'logger'
 
 module SilverpopClient
   module Configuration
-    VALID_CONNECTION_KEYS =       [].freeze
-    VALID_OPTIONS_KEYS =          [ :silverpop_api_url,
+    VALID_CONFIG_KEYS =           [ :silverpop_api_url,
                                     :silverpop_api_port,
                                     :silverpop_api_path,
                                     :silverpop_transact_url,
@@ -14,8 +13,6 @@ module SilverpopClient
                                     :silverpop_ftp_port,
                                     :silverpop_ftp_path,
                                     :logger ].freeze
-
-    VALID_CONFIG_KEYS =           VALID_CONNECTION_KEYS + VALID_OPTIONS_KEYS
 
     attr_accessor *VALID_CONFIG_KEYS
 
