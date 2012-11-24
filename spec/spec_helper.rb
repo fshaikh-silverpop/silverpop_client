@@ -138,3 +138,14 @@ end
 def failure_message
   "<Envelope><Body><RESULT><SUCCESS>FALSE</SUCCESS></RESULT></BODY></ENVELOPE>"
 end
+
+def mailing_info_xml
+  "<Envelope> <Body>
+  <RESULT> <SUCCESS>TRUE</SUCCESS> <EMAIL>somebody@domain.com</EMAIL> <Email>somebody@domain.com</Email> <RecipientId>33439394</RecipientId> <EmailType>0</EmailType> <LastModified>6/25/04 3:29 PM</LastModified> <CreatedFrom>1</CreatedFrom> <OptedIn>6/25/04 3:29 PM</OptedIn> <OptedOut/> <COLUMNS>
+  <COLUMN> <NAME>Fname</NAME> <VALUE>Somebody</VALUE>
+  </COLUMN> <COLUMN>
+  <NAME>Lname</NAME>
+  <VALUE>Special</VALUE> </COLUMN>
+  </COLUMNS> </RESULT>
+  </Body> </Envelope>"
+end

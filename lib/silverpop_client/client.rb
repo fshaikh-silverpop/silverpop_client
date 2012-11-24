@@ -42,6 +42,16 @@ module SilverpopClient
       result_successful?(post_to_silverpop_api(XmlGenerators.xml_for_remove_recipient(email)))
     end
 
+    def user_opted_out?(email)
+      Hpricot.XML(get_recipient_data(email)).search('optedout').andand.inner_text.present?
+    rescue Exception
+      false
+    end
+
+    def get_recipient_data(email)
+      post_to_silverpop_api(XmlGenerators.xml_for_select_recipient_data(email))
+    end
+
     private
 
     def post_to_silverpop_api(data)

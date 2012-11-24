@@ -34,7 +34,6 @@ describe SilverpopClient::EngageApiClient do
   end
 
   describe '.request_sent_mailings_for_org' do
-
     it 'should generate a csv from the output' do
       final_csv = [
           "mailing_id,report_id,scheduled_ts,mailing_name,list_name,list_id,parent_list_id,user_name,sent_ts,num_sent,subject,visibility",

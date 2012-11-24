@@ -7,6 +7,8 @@ describe SilverpopClient do
 
     @account_name = "transactional"
     @client = SilverpopClient::Client.new(:account_name => @account_name)
+
+    @test_email = "somebody@domain.com"
   end
 
   it 'should have a version' do
@@ -41,10 +43,6 @@ describe SilverpopClient do
   end
 
   describe '.remove_contact' do
-    before :all do
-      @test_email = "test@test.com"
-    end
-
     it 'should post the correct xml to silverpop' do
       @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_remove_recipient(@test_email)).and_return(success_message)
 
@@ -55,6 +53,22 @@ describe SilverpopClient do
       @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_remove_recipient(@test_email)).and_return(failure_message)
 
       @client.remove_contact(@test_email).should be_false
+    end
+  end
+
+  describe '.user_opted_out?' do
+    it 'should figure out that the default xml is opted out' do
+      @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_select_recipient_data(@test_email)).once.and_return(mailing_info_xml)
+
+      @client.user_opted_out?(@test_email).should be_false
+    end
+  end
+
+  describe '.get_recipient_data' do
+    it 'should get the data' do
+      @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_select_recipient_data(@test_email)).once.and_return(mailing_info_xml)
+
+      @client.get_recipient_data(@test_email)
     end
   end
 end
