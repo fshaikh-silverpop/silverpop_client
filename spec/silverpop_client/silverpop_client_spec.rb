@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SilverpopClient do
+describe SilverpopClient::Client do
   before :each do
     SilverpopClient.reset
     SilverpopClient.silverpop_list_id = "123"
