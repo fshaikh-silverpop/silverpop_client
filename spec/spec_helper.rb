@@ -92,3 +92,49 @@ def silverpop_add_recipient_response_xml(results = 1, inject_failures_at_indices
   xml << "</Body>"
   xml << "</Envelope>"
 end
+
+def silverpop_mailing_data_response_xml
+  "<Envelope>
+  <Body>
+  <RESULT>
+  <SUCCESS>TRUE</SUCCESS>
+  <Mailing>
+  <MailingId>4727357</MailingId>
+  <ReportId>171702887</ReportId>
+  <ScheduledTS>2011-01-24 06:00:00.0</ScheduledTS>
+  <MailingName><![CDATA[Sale_New Years_35 Perc_StartFresh B_2011.01.24_Low 5]]></MailingName>
+  <ListName><![CDATA[Sale_Low_5]]></ListName>
+  <ListId>1152641</ListId>
+  <ParentListId>906300</ParentListId>
+  <UserName>Julie Nguyen</UserName>
+  <SentTS/>
+  <NumSent>0</NumSent>
+  <Subject><![CDATA[Your Future Is Brighter With Lumosity.]]></Subject>
+  <Visibility>Shared</Visibility>
+  </Mailing>
+  <Mailing>
+  <MailingId>4827180</MailingId>
+  <ReportId>177637189</ReportId>
+  <ScheduledTS>2011-05-15 09:00:00.0</ScheduledTS>
+  <MailingName><![CDATA[Brain Trainer Start Trial Drip_Day 03_01234_2011.04.21_5 Day Trial]]></MailingName>
+  <ListName><![CDATA[Brain Trainer Start Trial Drip 01234]]></ListName>
+  <ListId>959321</ListId>
+  <ParentListId>906300</ParentListId>
+  <UserName>Julie Nguyen</UserName>
+  <SentTS>2011-05-15 09:10:58.0</SentTS>
+  <NumSent>1</NumSent>
+  <Subject><![CDATA[Your Gift from Lumosity]]></Subject>
+  <Visibility>Shared</Visibility>
+  </Mailing>
+  </RESULT>
+  </Body>
+  </Envelope>"
+end
+
+def success_message
+  "<Envelope><Body><RESULT><SUCCESS>TRUE</SUCCESS></RESULT></BODY></ENVELOPE>"
+end
+
+def failure_message
+  "<Envelope><Body><RESULT><SUCCESS>FALSE</SUCCESS></RESULT></BODY></ENVELOPE>"
+end

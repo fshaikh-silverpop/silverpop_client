@@ -38,6 +38,10 @@ module SilverpopClient
     end
     alias_method :update_contact, :update_contacts
 
+    def remove_contact(email)
+      result_successful?(post_to_silverpop_api(XmlGenerators.xml_for_remove_recipient(email)))
+    end
+
     private
 
     def post_to_silverpop_api(data)

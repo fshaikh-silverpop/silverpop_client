@@ -1,9 +1,12 @@
 require 'spec_helper'
 
 describe SilverpopClient do
-  before :all do
+  before :each do
     SilverpopClient.reset
     SilverpopClient.silverpop_list_id = "123"
+
+    @account_name = "transactional"
+    @client = SilverpopClient::Client.new(:account_name => @account_name)
   end
 
   it 'should have a version' do
@@ -11,16 +14,12 @@ describe SilverpopClient do
   end
 
   it 'should instantiate' do
-    account_name = "transactional"
-
-    sc = SilverpopClient::Client.new(:account_name => account_name)
-    sc.should_not be nil
-    sc.account_name.should == account_name
+    @client.should_not be_nil
+    @client.account_name.should == @account_name
   end
 
   describe '.update_contacts' do
     before :all do
-      @client = SilverpopClient::Client.new
       @update_xml = SilverpopClient::XmlGenerators.xml_for_add_recipient(sample_array_of_contact_hashes)
     end
 
@@ -38,6 +37,24 @@ describe SilverpopClient do
         @client.should_receive(:post_to_silverpop_api).with(update_sample_array_of_contact_hashes_xml).once.and_return(silverpop_add_recipient_response_xml(3, [0]))
         @client.update_contacts(sample_array_of_contact_hashes).should == sample_array_of_contact_hashes[1..2]
       end
+    end
+  end
+
+  describe '.remove_contact' do
+    before :all do
+      @test_email = "test@test.com"
+    end
+
+    it 'should post the correct xml to silverpop' do
+      @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_remove_recipient(@test_email)).and_return(success_message)
+
+      @client.remove_contact(@test_email).should be_true
+    end
+
+    it 'should return false when an error is returned' do
+      @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_remove_recipient(@test_email)).and_return(failure_message)
+
+      @client.remove_contact(@test_email).should be_false
     end
   end
 end

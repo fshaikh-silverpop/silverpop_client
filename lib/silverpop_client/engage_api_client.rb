@@ -1,3 +1,5 @@
+require 'rexml/document'
+
 module SilverpopClient
   class EngageApiClient < Client
 
@@ -18,6 +20,9 @@ module SilverpopClient
     def logged_in?
       !!@silverpop_session_id
     end
+
+    ##
+    # Logs in with the credentials passed at client instantiation time
 
     def login
       SilverpopClient.logger.info("Attempting to log in to silverpop with #{@username}...")
@@ -102,27 +107,33 @@ module SilverpopClient
     def request_sent_mailings_for_org(start_date, end_date, output_path)
       login unless logged_in?
 
-      SilverpopClient.logger.info("Requesting list of sent mailings from silverpop...")
+      SilverpopClient.logger.debug("Requesting list of sent mailings from silverpop...")
 
       result = nil
       begin
         result = post_to_silverpop_engage_api(xml_for_get_sent_mailings_for_org(start_date, end_date))
         if result && result_successful?(result)
-          Rails.logger.info("Silverpop request was successful, result is #{result.pretty_inspect}...")
+          SilverpopClient.logger.debug("Silverpop request was successful, result is #{result.pretty_inspect}...")
         else
           if result.nil?
-            Rails.logger.error("Error requesting silverpop report, empty response...")
+            raise("Error requesting silverpop report, empty response...")
           else
-            Rails.logger.error("Error requesting silverpop report, result is #{result.pretty_inspect}...")
+            raise("Error requesting silverpop report, result is #{result.pretty_inspect}...")
           end
-          raise "Problem with silverpop response"
         end
         result
       ensure
         logout
       end
 
-      dump_sent_mailings_xml_to_csv(result, File.join(output_path, "silverpop_#{@account_name}_#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv"))
+      if @account_name
+        output_filename = File.join(output_path, "silverpop_sent_mailings_#{@account_name}_#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv")
+      else
+        output_filename = File.join(output_path, "silverpop_sent_mailings_#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv")
+      end
+
+      csv_doc = generate_sent_mailings_csv(result)
+      File.open(output_filename, "w") {|f| f.write(csv_doc.join("\n"))}
     end
 
     private
@@ -139,11 +150,9 @@ module SilverpopClient
     end
 
     ##
-    # Parses out a csv from +response_xml+ and writes it to +output_filename
-    #
-    # Returns an array of comma separated strings with a header row at index 0
+    # Parses out a csv from +response_xml+ and writes it to +output_file+
 
-    def generate_sent_mailings_csv(response_xml, output_filename)
+    def generate_sent_mailings_csv(response_xml)
       doc = REXML::Document.new(response_xml)
 
       csv_doc = ["mailing_id,report_id,scheduled_ts,mailing_name,list_name,list_id,parent_list_id,user_name,sent_ts,num_sent,subject,visibility"]
@@ -151,7 +160,7 @@ module SilverpopClient
       doc.elements.each("Envelope/Body/RESULT/Mailing") do |mailing|
         row = []
 
-        time = mailing.elements["ScheduledTS"].text.to_time.strftime('%a %b %-d %H:%M:%S %Z %Y').sub('GMT', 'UTC')
+        time = DateTime.parse(mailing.elements["ScheduledTS"].text).to_time.utc.strftime('%a %b %-d %H:%M:%S %Z %Y').sub('GMT', 'UTC')
 
         row << (mailing.elements["MailingId"] ? mailing.elements["MailingId"].text : nil)
         row << (mailing.elements["ReportId"] ? mailing.elements["ReportId"].text : nil)
@@ -172,7 +181,7 @@ module SilverpopClient
         csv_doc << row.join(",")
       end
 
-      File.open("#{output_filename}_#{$$}.csv", "w") {|f| f.write(csv_doc.join("\n"))}
+      csv_doc
     end
   end
 end
