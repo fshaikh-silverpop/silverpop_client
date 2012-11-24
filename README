@@ -1,0 +1,5 @@
+This gem is intended to provide a clean Ruby 1.9 interface to Silverpop's mailing APIs for
+
+    1. Managing a mailing list in Silverpop - users and all of their properties.
+    2. Make requests to the Silverpop Engage API to pull reports.
+    3. Enable sending of transactional emails.

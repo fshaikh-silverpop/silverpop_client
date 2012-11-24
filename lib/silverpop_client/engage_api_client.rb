@@ -22,7 +22,11 @@ module SilverpopClient
     end
 
     ##
-    # Logs in with the credentials passed at client instantiation time
+    # Logs in with the credentials passed at client instantiation time.  All requests to post_to_silverpop_engage_api will be prepended
+    # with the session encoding returned from a successful request.
+    #
+    # All data requests will actually log the client in and out, so there is usually no need to call this directly if you are using
+    # the provided API methods.
 
     def login
       if logged_in?
@@ -46,8 +50,12 @@ module SilverpopClient
       end
     end
 
+    ##
+    # Logs out of the silverpop API; sets the session_encoding and session_id back to nil
+
     def logout
       SilverpopClient.logger.info("Attempting to log out from silverpop...")
+
       result = post_to_silverpop_engage_api(XmlGenerators.xml_for_logout)
       if result_successful?(result)
         SilverpopClient.logger.info("Successfully logged out.")
@@ -104,9 +112,9 @@ module SilverpopClient
     # Request a list of sent mailing from +start_date+ to +end_date+ and write them to +output_path+
 
     def request_sent_mailings_for_org(start_date, end_date)
-      login unless logged_in?
+      SilverpopClient.logger.info("Requesting list of sent mailings from silverpop...")
 
-      SilverpopClient.logger.debug("Requesting list of sent mailings from silverpop...")
+      login unless logged_in?
 
       result = nil
       begin
@@ -127,6 +135,9 @@ module SilverpopClient
 
       generate_sent_mailings_csv(result)
     end
+
+    ##
+    # Handles requesting the sent mailing response xml from +start_date+ to +end_date+ and writing to +output_path+
 
     def download_sent_mailings_for_org(start_date, end_date, output_path)
       output_filename = File.join(output_path, "silverpop_sent_mailings_#{@account_name ? @account_name + "_" : ""}#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv")
@@ -149,7 +160,9 @@ module SilverpopClient
     end
 
     ##
-    # Parses out a csv from +response_xml+ and writes it to +output_file+
+    # Parses out a csv from +response_xml+
+    #
+    # Returns an array of CSV strings.
 
     def generate_sent_mailings_csv(response_xml)
       doc = REXML::Document.new(response_xml)

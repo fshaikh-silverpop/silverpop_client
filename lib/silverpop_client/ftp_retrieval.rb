@@ -20,9 +20,9 @@ module SilverpopClient
               SilverpopClient.logger.info("Attempting download of #{remote_file} to #{local_filename}")
               sftp.download!(remote_file, local_filename)
             rescue RuntimeError => e
-              SilverpopClient.logger.info('Connection Error: %s' % e)
-              SilverpopClient.logger.info('Source: %s' % e.backtrace)
-              SilverpopClient.logger.info('Message: %s' % e.message)
+              SilverpopClient.logger.warn('Connection Error: %s' % e)
+              SilverpopClient.logger.warn('Source: %s' % e.backtrace)
+              SilverpopClient.logger.warn('Message: %s' % e.message)
 
               if e.message =~ /no such file/
                 SilverpopClient.logger.info("File #{report_filename} doesn't exist (yet), sleeping 9 minutes and retrying.")
@@ -33,11 +33,12 @@ module SilverpopClient
           end
         end
       rescue Errno::ECONNRESET => e
-        SilverpopClient.logger.info("ECONNRESET thrown by silverpop; #{retries} tries left.")
+        SilverpopClient.logger.warn("ECONNRESET thrown by silverpop; #{retries} tries left.")
         retries -= 1
         if retries > 0
           retry
         else
+          SilverpopClient.logger.error("Out of retries for silverpop download.")
           raise "Out of retries for silverpop download."
         end
       end
