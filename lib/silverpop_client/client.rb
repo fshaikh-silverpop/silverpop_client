@@ -52,6 +52,10 @@ module SilverpopClient
       post_to_silverpop_api(XmlGenerators.xml_for_select_recipient_data(email))
     end
 
+    def opt_out_contact(email)
+      result_successful?(post_to_silverpop_api(XmlGenerators.xml_for_opt_out_recipient(email)))
+    end
+
     private
 
     def post_to_silverpop_api(data)
