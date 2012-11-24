@@ -55,7 +55,7 @@ module SilverpopClient
 
       # If used from within a Rails application, you might want to set the logger to Rails.logger
       self.logger =                   Logger.new(STDERR)
-      self.logger.level =             Logger::DEBUG
+      self.logger.level =             Logger::FATAL
     end
   end
 end
