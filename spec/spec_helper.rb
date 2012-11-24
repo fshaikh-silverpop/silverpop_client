@@ -131,6 +131,14 @@ def silverpop_mailing_data_response_xml
   </Envelope>"
 end
 
+def silverpop_mailing_data_csv
+  [
+    "mailing_id,report_id,scheduled_ts,mailing_name,list_name,list_id,parent_list_id,user_name,sent_ts,num_sent,subject,visibility",
+    "4727357,171702887,Mon Jan 24 06:00:00 UTC 2011,Sale_New Years_35 Perc_StartFresh B_2011.01.24_Low 5,Sale_Low_5,1152641,906300,Julie Nguyen,\\N,0,Your Future Is Brighter With Lumosity.,Shared",
+    "4827180,177637189,Sun May 15 09:00:00 UTC 2011,Brain Trainer Start Trial Drip_Day 03_01234_2011.04.21_5 Day Trial,Brain Trainer Start Trial Drip 01234,959321,906300,Julie Nguyen,2011-05-15 09:10:58.0,1,Your Gift from Lumosity,Shared"
+  ]
+end
+
 def success_message
   "<Envelope><Body><RESULT><SUCCESS>TRUE</SUCCESS></RESULT></BODY></ENVELOPE>"
 end

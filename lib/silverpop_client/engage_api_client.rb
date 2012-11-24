@@ -103,7 +103,7 @@ module SilverpopClient
     ##
     # Request a list of sent mailing from +start_date+ to +end_date+ and write them to +output_path+
 
-    def request_sent_mailings_for_org(start_date, end_date, output_path)
+    def request_sent_mailings_for_org(start_date, end_date)
       login unless logged_in?
 
       SilverpopClient.logger.debug("Requesting list of sent mailings from silverpop...")
@@ -131,7 +131,7 @@ module SilverpopClient
     def download_sent_mailings_for_org(start_date, end_date, output_path)
       output_filename = File.join(output_path, "silverpop_sent_mailings_#{@account_name ? @account_name + "_" : ""}#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv")
 
-      csv_doc = request_sent_mailings_for_org(start_date, end_date, output_path)
+      csv_doc = request_sent_mailings_for_org(start_date, end_date)
       File.open(output_filename, "w") {|f| f.write(csv_doc.join("\n"))}
     end
 
