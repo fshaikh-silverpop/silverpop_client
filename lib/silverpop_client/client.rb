@@ -4,7 +4,14 @@ require 'hpricot'
 module SilverpopClient
   class Client
 
-    def initialize
+    attr_accessor :account_name
+
+    ##
+    # Instantiate the client object.  Options:
+    #   :account_name - Will be used when writing files.  Useful if you are managing multiple silverpop_accounts.
+
+    def initialize(options = {})
+      @account_name = options[:account_name] ? options[:account_name] : ""
       @http = Net::HTTP.new(SilverpopClient.silverpop_api_url, SilverpopClient.silverpop_api_port)
 
       @headers = {
@@ -26,6 +33,7 @@ module SilverpopClient
       array_of_contact_hashes.each_with_index do |hsh, i|
         successfully_updated << hsh unless error_indices.include?(i)
       end
+
       successfully_updated
     end
     alias_method :update_contact, :update_contacts
@@ -41,8 +49,6 @@ module SilverpopClient
     end
 
     def post(path, data)
-#      return if self.class.disabled?("didn't post #{data} to #{path}")
-
       begin
         raise 'Silverpop path not set!' if path.blank?
         @headers["Content-length"] = data.size.to_s

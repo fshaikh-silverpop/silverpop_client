@@ -5,6 +5,7 @@ module SilverpopClient
 
     ##
     # Attempts to download +report_filename+ from the configured silverpop_ftp_path in the SilverpopClient gem
+    #
     # Returns the path to the downloaded file
 
     def self.download_report_from_silverpop_ftp(silverpop_login, silverpop_password, report_filename, output_path)

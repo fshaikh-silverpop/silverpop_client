@@ -3,8 +3,8 @@ module SilverpopClient
 
     attr_accessor :data_job_ids
 
-    def initialize(username, password)
-      super()
+    def initialize(username, password, options = {})
+      super(options)
 
       @username = username
       @password = password
@@ -58,7 +58,8 @@ module SilverpopClient
 
     ##
     # Submits a raw recipient report request to silverpop from +start_date+ to +end_date+
-    # Returns the filename
+    #
+    # Returns the filename silverpop will write the report out to on their FTP server
     # Populates the job id in data_job_ids
 
     def request_raw_recipient_data_export(start_date, end_date)
@@ -95,7 +96,10 @@ module SilverpopClient
       FtpRetrieval.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
     end
 
-    def request_sent_mailings_for_org(start_date, end_date, output_path, account_name = "")
+    ##
+    # Request a list of sent mailing from +start_date+ to +end_date+ and write them to +output_path+
+
+    def request_sent_mailings_for_org(start_date, end_date, output_path)
       login unless logged_in?
 
       SilverpopClient.logger.info("Requesting list of sent mailings from silverpop...")
@@ -118,7 +122,7 @@ module SilverpopClient
         logout
       end
 
-      dump_sent_mailings_xml_to_csv(result, File.join(output_path, "silverpop_#{account_name}_#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv"))
+      dump_sent_mailings_xml_to_csv(result, File.join(output_path, "silverpop_#{@account_name}_#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv"))
     end
 
     private

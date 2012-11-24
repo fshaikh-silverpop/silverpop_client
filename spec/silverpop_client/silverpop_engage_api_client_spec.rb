@@ -1,20 +1,19 @@
 require 'spec_helper'
 
 describe SilverpopClient::EngageApiClient do
-  before :all do
+  before :each do
     SilverpopClient.reset
+
+    @test_username = "test"
+    @test_password = "test"
+    @client = SilverpopClient::EngageApiClient.new(@test_username, @test_password)
   end
 
   it 'should instantiate' do
-    sc = SilverpopClient::EngageApiClient.new("test", "test")
-    sc.should_not be nil
+    @client.should_not be nil
   end
 
   describe '.login' do
-    before :all do
-      @client = SilverpopClient::EngageApiClient.new("test", "test")
-    end
-
     it 'should not be logged in at first' do
       @client.logged_in?.should == false
     end
@@ -34,13 +33,11 @@ describe SilverpopClient::EngageApiClient do
     end
   end
 
-  describe '.request_raw_recipient_report' do
-    before :all do
-      @test_username = "test"
-      @test_password = "test"
-      @client = SilverpopClient::EngageApiClient.new(@test_username, @test_password)
-    end
+  describe '.request_sent_mailings_for_org' do
 
+  end
+
+  describe '.request_raw_recipient_report' do
     it 'should send the request correctly' do
       report_request_xml = SilverpopClient::XmlGenerators.xml_for_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2))
 

@@ -11,8 +11,11 @@ describe SilverpopClient do
   end
 
   it 'should instantiate' do
-    sc = SilverpopClient::Client.new
+    account_name = "transactional"
+
+    sc = SilverpopClient::Client.new(:account_name => account_name)
     sc.should_not be nil
+    sc.account_name.should == account_name
   end
 
   describe '.update_contacts' do
