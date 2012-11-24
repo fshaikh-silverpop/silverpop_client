@@ -25,12 +25,11 @@ module SilverpopClient
     # Logs in with the credentials passed at client instantiation time
 
     def login
-      SilverpopClient.logger.info("Attempting to log in to silverpop with #{@username}...")
-      SilverpopClient.logger.info("Sending #{XmlGenerators.xml_for_login(@username, @password)}")
-
       if logged_in?
         SilverpopClient.logger.info("Trying to login when already logged in...")
         return true
+      else
+        SilverpopClient.logger.info("Attempting to log in to silverpop with #{@username}...")
       end
 
       result = post_to_silverpop_api(XmlGenerators.xml_for_login(@username, @password))
@@ -42,7 +41,7 @@ module SilverpopClient
         @silverpop_session_encoding = parsed_results.search("/Envelope/Body/Result/SESSION_ENCODING").inner_text
         result
       else
-        SilverpopClient.logger.info("Failed login in to silverpop, result was #{result.pretty_inspect}...")
+        SilverpopClient.logger.error("Failed login in to silverpop, result was #{result.pretty_inspect}...")
         raise "Login failed with result #{result.pretty_inspect}"
       end
     end
@@ -56,7 +55,7 @@ module SilverpopClient
         @silverpop_session_encoding = nil
         true
       else
-        SilverpopClient.logger.info("Failed to logout from silverpop! Error: #{result.pretty_inspect}")
+        SilverpopClient.logger.error("Failed to logout from silverpop! Error: #{result.pretty_inspect}")
         false
       end
     end

@@ -59,6 +59,7 @@ module SilverpopClient
     private
 
     def post_to_silverpop_api(data)
+      SilverpopClient.logger.debug("Posting #{data} to #{SilverpopClient.silverpop_api_path}")
       post(SilverpopClient.silverpop_api_path, data)
     end
 
