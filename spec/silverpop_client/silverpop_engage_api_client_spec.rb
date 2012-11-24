@@ -19,7 +19,7 @@ describe SilverpopClient::EngageApiClient do
     end
 
     it 'should be able to login and logout' do
-      login_request_xml = SilverpopClient::XmlGenerators.xml_for_login("test", "test")
+      login_request_xml = SilverpopClient::XmlGenerators.xml_for_login(@test_username, @test_password)
       logout_request_xml = SilverpopClient::XmlGenerators.xml_for_logout
 
       @client.should_receive(:post_to_silverpop_api).with(login_request_xml).once.and_return(successful_login_xml)
@@ -34,6 +34,23 @@ describe SilverpopClient::EngageApiClient do
   end
 
   describe '.request_sent_mailings_for_org' do
+    it 'should submit the request' do
+      login_request_xml = SilverpopClient::XmlGenerators.xml_for_login(@test_username, @test_password)
+      output_path = "/test"
+
+      start_date = Date.new(2011, 1, 1)
+      end_date =  Date.new(2011, 1, 15)
+
+      sent_mailing_request_xml = SilverpopClient::XmlGenerators.xml_for_get_sent_mailings_for_org(start_date, end_date)
+
+      @client.should_receive(:post_to_silverpop_api).with(login_request_xml).once.and_return(successful_login_xml)
+      @client.should_receive(:post_to_silverpop_engage_api).with(sent_mailing_request_xml).once.and_return(success_message)
+      @client.should_receive(:generate_sent_mailings_csv).with(success_message)
+      @client.should_receive(:logout).once.and_return(successful_logout_xml)
+
+      @client.request_sent_mailings_for_org(start_date, end_date, output_path)
+    end
+
     it 'should generate a csv from the output' do
       final_csv = [
           "mailing_id,report_id,scheduled_ts,mailing_name,list_name,list_id,parent_list_id,user_name,sent_ts,num_sent,subject,visibility",

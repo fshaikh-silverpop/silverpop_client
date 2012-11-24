@@ -111,7 +111,7 @@ module SilverpopClient
 
       result = nil
       begin
-        result = post_to_silverpop_engage_api(xml_for_get_sent_mailings_for_org(start_date, end_date))
+        result = post_to_silverpop_engage_api(XmlGenerators.xml_for_get_sent_mailings_for_org(start_date, end_date))
         if result && result_successful?(result)
           SilverpopClient.logger.debug("Silverpop request was successful, result is #{result.pretty_inspect}...")
         else
@@ -126,13 +126,18 @@ module SilverpopClient
         logout
       end
 
+      generate_sent_mailings_csv(result)
+    end
+
+    def download_sent_mailings_for_org(start_date, end_date, output_path)
+      csv_doc = request_sent_mailings_for_org(start_date, end_date, output_path)
+
       if @account_name
         output_filename = File.join(output_path, "silverpop_sent_mailings_#{@account_name}_#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv")
       else
         output_filename = File.join(output_path, "silverpop_sent_mailings_#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv")
       end
 
-      csv_doc = generate_sent_mailings_csv(result)
       File.open(output_filename, "w") {|f| f.write(csv_doc.join("\n"))}
     end
 
