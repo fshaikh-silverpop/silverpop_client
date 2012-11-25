@@ -112,6 +112,7 @@ module SilverpopClient
 
     def request_and_retrieve_raw_recipient_data_export_report(start_date, end_date, output_path)
       filename = request_raw_recipient_data_export(start_date, end_date)
+      wait_for_job_completion(@data_job_ids.last)
       FtpRetrieval.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
     end
 
