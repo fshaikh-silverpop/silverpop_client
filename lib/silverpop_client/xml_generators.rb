@@ -148,6 +148,16 @@ module SilverpopClient
           }
         }
       end
+
+      def xml_for_get_job_status(job_id)
+        xml_base {|xml|
+          xml.GetJobStatus {
+            xml.JOB_ID {
+              job_id
+            }
+          }
+        }
+      end
     end
   end
 end

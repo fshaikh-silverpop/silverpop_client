@@ -92,4 +92,30 @@ describe SilverpopClient::EngageApiClient do
       @client.request_and_retrieve_raw_recipient_data_export_report(Date.new(2012,5,1), Date.new(2012,5,1), "/data")
     end
   end
+
+  describe '.get_job_status' do
+    it 'should submit the XML and parse out the status for one job' do
+      job_id = 1234
+
+      @client.should_receive(:login).once
+      @client.should_receive(:post_to_silverpop_engage_api).with(SilverpopClient::XmlGenerators.xml_for_get_job_status(job_id)).once.and_return(job_status_response_xml(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING))
+      @client.should_receive(:logout)
+
+      @client.get_job_status(job_id).should == SilverpopClient::EngageApiClient::JOB_STATUS_WAITING
+    end
+
+    it 'should pull all the statuses for everything in the data_job_ids array' do
+      @client.data_job_ids = [1234, 5678]
+
+      @client.should_receive(:login).once
+      @client.should_receive(:post_to_silverpop_engage_api).with(SilverpopClient::XmlGenerators.xml_for_get_job_status(@client.data_job_ids[0])).once.and_return(job_status_response_xml(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING))
+      @client.should_receive(:logout)
+
+      @client.should_receive(:login).once
+      @client.should_receive(:post_to_silverpop_engage_api).with(SilverpopClient::XmlGenerators.xml_for_get_job_status(@client.data_job_ids[1])).once.and_return(job_status_response_xml(SilverpopClient::EngageApiClient::JOB_STATUS_COMPLETE))
+      @client.should_receive(:logout)
+
+      @client.get_job_statuses.should == [SilverpopClient::EngageApiClient::JOB_STATUS_WAITING, SilverpopClient::EngageApiClient::JOB_STATUS_COMPLETE]
+    end
+  end
 end

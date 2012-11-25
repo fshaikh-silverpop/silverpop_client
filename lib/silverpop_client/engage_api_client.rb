@@ -3,6 +3,13 @@ require 'rexml/document'
 module SilverpopClient
   class EngageApiClient < Client
 
+    JOB_STATUS_WAITING = "WAITING"
+    JOB_STATUS_RUNNING = "RUNNING"
+    JOB_STATUS_CANCELED = "CANCELED"
+    JOB_STATUS_ERROR = "ERROR"
+    JOB_STATUS_COMPLETE = "COMPLETE"
+    JOB_STATUS_UNKNOWN = "UNKNOWN"
+
     attr_accessor :data_job_ids
 
     def initialize(username, password, options = {})
@@ -144,6 +151,34 @@ module SilverpopClient
 
       csv_doc = request_sent_mailings_for_org(start_date, end_date)
       File.open(output_filename, "w") {|f| f.write(csv_doc.join("\n"))}
+    end
+
+    ##
+    # Gets the statuses for all jobs whose ids are in the data_job_ids array
+    #
+    # Returns an array of statuses the same size as data_job_ids
+
+    def get_job_statuses
+      @data_job_ids.map {|job_id| get_job_status(job_id)}
+    end
+
+    ##
+    # Gets the status for the job with id +job_id+
+
+    def get_job_status(job_id)
+      login unless logged_in?
+
+      begin
+        result = post_to_silverpop_engage_api(XmlGenerators.xml_for_get_job_status(job_id))
+        if(result_successful?(result))
+          Hpricot(result).search("/Envelope/Body/RESULT/JOB_STATUS").inner_text
+        else
+          SilverpopClient.logger.error("Failed to retrieve status for job #{job_id}")
+          JOB_STATUS_UNKNOWN
+        end
+      ensure
+        logout
+      end
     end
 
     private
