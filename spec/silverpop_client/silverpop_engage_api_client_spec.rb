@@ -94,18 +94,20 @@ describe SilverpopClient::EngageApiClient do
   end
 
   describe '.get_job_status' do
-    it 'should submit the XML and parse out the status for one job' do
-      job_id = 1234
+    before :all do
+      @job_id = 1234
+    end
 
+    it 'should submit the XML and parse out the status for one job' do
       @client.should_receive(:login).once
-      @client.should_receive(:post_to_silverpop_engage_api).with(SilverpopClient::XmlGenerators.xml_for_get_job_status(job_id)).once.and_return(job_status_response_xml(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING))
+      @client.should_receive(:post_to_silverpop_engage_api).with(SilverpopClient::XmlGenerators.xml_for_get_job_status(@job_id)).once.and_return(job_status_response_xml(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING))
       @client.should_receive(:logout)
 
-      @client.get_job_status(job_id).should == SilverpopClient::EngageApiClient::JOB_STATUS_WAITING
+      @client.get_job_status(@job_id).should == SilverpopClient::EngageApiClient::JOB_STATUS_WAITING
     end
 
     it 'should pull all the statuses for everything in the data_job_ids array' do
-      @client.data_job_ids = [1234, 5678]
+      @client.data_job_ids = [@job_id, 5678]
 
       @client.should_receive(:login).once
       @client.should_receive(:post_to_silverpop_engage_api).with(SilverpopClient::XmlGenerators.xml_for_get_job_status(@client.data_job_ids[0])).once.and_return(job_status_response_xml(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING))
@@ -116,6 +118,36 @@ describe SilverpopClient::EngageApiClient do
       @client.should_receive(:logout)
 
       @client.get_job_statuses.should == [SilverpopClient::EngageApiClient::JOB_STATUS_WAITING, SilverpopClient::EngageApiClient::JOB_STATUS_COMPLETE]
+    end
+
+    describe '.wait_for_job_completion' do
+      before :each do
+        SilverpopClient.seconds_between_job_status_polling = 0
+      end
+
+      it 'should poll until it gets COMPLETE' do
+        @client.should_receive(:get_job_status).once.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING)
+        @client.should_receive(:get_job_status).exactly(2).times.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_RUNNING)
+        @client.should_receive(:get_job_status).once.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_COMPLETE)
+
+        @client.send(:wait_for_job_completion, @job_id).should == SilverpopClient::EngageApiClient::JOB_STATUS_COMPLETE
+      end
+
+      it 'should handle CANCELED status' do
+        @client.should_receive(:get_job_status).once.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING)
+        @client.should_receive(:get_job_status).exactly(2).times.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_RUNNING)
+        @client.should_receive(:get_job_status).once.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_CANCELED)
+
+        @client.send(:wait_for_job_completion, @job_id).should == SilverpopClient::EngageApiClient::JOB_STATUS_CANCELED
+      end
+
+      it 'should handle ERROR status with an exception' do
+        @client.should_receive(:get_job_status).once.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_WAITING)
+        @client.should_receive(:get_job_status).exactly(2).times.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_RUNNING)
+        @client.should_receive(:get_job_status).once.and_return(SilverpopClient::EngageApiClient::JOB_STATUS_ERROR)
+
+        expect {@client.send(:wait_for_job_completion, @job_id)}.to raise_error
+      end
     end
   end
 end

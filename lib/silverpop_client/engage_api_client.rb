@@ -3,12 +3,12 @@ require 'rexml/document'
 module SilverpopClient
   class EngageApiClient < Client
 
-    JOB_STATUS_WAITING = "WAITING"
-    JOB_STATUS_RUNNING = "RUNNING"
+    JOB_STATUS_WAITING =  "WAITING"
+    JOB_STATUS_RUNNING =  "RUNNING"
     JOB_STATUS_CANCELED = "CANCELED"
-    JOB_STATUS_ERROR = "ERROR"
+    JOB_STATUS_ERROR =    "ERROR"
     JOB_STATUS_COMPLETE = "COMPLETE"
-    JOB_STATUS_UNKNOWN = "UNKNOWN"
+    JOB_STATUS_UNKNOWN =  "UNKNOWN"
 
     attr_accessor :data_job_ids
 
@@ -229,6 +229,28 @@ module SilverpopClient
       end
 
       csv_doc
+    end
+
+    ##
+    # Waits for a job to return the status COMPLETE for +job_id+
+    #
+    # Raises an error if it gets job status ERROR; returns CANCELED if it gets job status CANCELED
+
+    def wait_for_job_completion(job_id)
+      while (job_status = get_job_status(job_id)) !~ /#{JOB_STATUS_ERROR}|#{JOB_STATUS_COMPLETE}|#{JOB_STATUS_CANCELED}/
+        SilverpopClient.logger.info("Job ID #{job_id} had status #{job_status}; sleeping #{SilverpopClient.seconds_between_job_status_polling} seconds")
+        sleep(SilverpopClient.seconds_between_job_status_polling)
+      end
+
+      return job_status if job_status == JOB_STATUS_COMPLETE
+
+      if job_status == JOB_STATUS_ERROR or job_status == JOB_STATUS_UNKNOWN
+        SilverpopClient.logger.error("Error reported by job status for job #{job_id}")
+        raise "Error reported by job status for job #{job_id}"
+      elsif job_status == JOB_STATUS_CANCELED
+        SilverpopClient.logger.warn("Job #{job_id} canceled.")
+        return job_status
+      end
     end
   end
 end
