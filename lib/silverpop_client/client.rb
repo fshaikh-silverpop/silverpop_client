@@ -38,9 +38,15 @@ module SilverpopClient
     end
     alias_method :update_contact, :update_contacts
 
+    ##
+    # Removes +email+ from the silverpop list
+
     def remove_contact(email)
       result_successful?(post_to_silverpop_api(XmlGenerators.xml_for_remove_recipient(email)))
     end
+
+    ##
+    # Did +email+ user opt out of emails via silverpop?
 
     def user_opted_out?(email)
       Hpricot.XML(get_recipient_data(email)).search('optedout').andand.inner_text.present?
@@ -48,9 +54,15 @@ module SilverpopClient
       false
     end
 
+    ##
+    # Pulls the property/value data silverpop has stored for +email+
+
     def get_recipient_data(email)
       post_to_silverpop_api(XmlGenerators.xml_for_select_recipient_data(email))
     end
+
+    ##
+    # Notify silverpop that +email+ has opted out
 
     def opt_out_contact(email)
       result_successful?(post_to_silverpop_api(XmlGenerators.xml_for_opt_out_recipient(email)))
@@ -58,14 +70,25 @@ module SilverpopClient
 
     private
 
+    ##
+    # Posts xml +data+ to silverpop's api
+
     def post_to_silverpop_api(data)
       SilverpopClient.logger.debug("Posting #{data} to #{SilverpopClient.silverpop_api_path}")
       post(SilverpopClient.silverpop_api_path, data)
     end
 
+    ##
+    # Look for generic SUCCESS property in +result+ xml from a silverpop query
+
     def result_successful?(result)
       Hpricot(result).search("/Envelope/Body/RESULT/SUCCESS").inner_text =~ /^TRUE$/i ? true : false
     end
+
+    ##
+    # Post +data+ to the +path+ specified on the configured Silverpop API server.
+    #
+    # Returns the XML response, or nil in case of exception.
 
     def post(path, data)
       begin
@@ -80,6 +103,11 @@ module SilverpopClient
         nil
       end
     end
+
+    ##
+    # Look for partial failure messages in the response +xml+ from Silverpop.
+    # For example, sometimes with a call to AddRecipient, 9 out of 10 records will work but one will fail - this method returns the indices to the failed
+    # values in the set passed to a function that works on sets
 
     def handle_response_errors(xml, operation = 'addrecipient')
       error_indices = []
