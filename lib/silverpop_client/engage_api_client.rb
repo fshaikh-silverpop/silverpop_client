@@ -180,6 +180,7 @@ module SilverpopClient
     # Gets the status for the job with id +job_id+
 
     def get_job_status(job_id)
+      SilverpopClient.logger.info("Getting job status for job #{job_id}...")
       login unless logged_in?
 
       begin
@@ -202,7 +203,6 @@ module SilverpopClient
 
     def post_to_silverpop_engage_api(data)
       raise "Must be logged in to post to the engage API!" unless logged_in?
-      SilverpopClient.logger.debug("XML for silverpop request:\n#{data}")
 
       silverpop_path = @silverpop_session_encoding ? SilverpopClient.silverpop_api_path + @silverpop_session_encoding : SilverpopClient.silverpop_api_path
       post(silverpop_path, data)

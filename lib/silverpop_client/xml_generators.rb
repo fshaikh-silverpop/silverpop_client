@@ -152,9 +152,7 @@ module SilverpopClient
       def xml_for_get_job_status(job_id)
         xml_base {|xml|
           xml.GetJobStatus {
-            xml.JOB_ID {
-              job_id
-            }
+            xml.JOB_ID(job_id)
           }
         }
       end
