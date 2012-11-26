@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SilverpopClient::SilverpopDate, :feature_set => :emails do
+describe SilverpopClient::SilverpopDate do
   describe '.parse' do
     it 'parses a Silverpop-formatted date string to a Date object' do
       date = 'October%2013,%201974'
