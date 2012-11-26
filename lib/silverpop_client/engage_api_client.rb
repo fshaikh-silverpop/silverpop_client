@@ -112,8 +112,21 @@ module SilverpopClient
 
     def request_and_retrieve_raw_recipient_data_export_report(start_date, end_date, output_path)
       filename = request_raw_recipient_data_export(start_date, end_date)
-      wait_for_job_completion(@data_job_ids.last)
-      FtpRetrieval.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
+      job_id = @data_job_ids.last
+
+      begin
+        status = wait_for_job_completion(job_id)
+      rescue Exception => e
+        SilverpopClient.logger.error("Exception #{e.pretty_inspect} while waiting for job to complete")
+        SilverpopClient.logger.error(e.backtrace)
+        return
+      end
+
+      if status == JOB_STATUS_CANCELED
+        SilverpopClient.logger.warn("Job #{job_id} was canceled!")
+      elsif status == JOB_STATUS_COMPLETE
+        FtpRetrieval.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
+      end
     end
 
     ##
@@ -238,6 +251,8 @@ module SilverpopClient
     # Raises an error if it gets job status ERROR; returns CANCELED if it gets job status CANCELED
 
     def wait_for_job_completion(job_id)
+      SilverpopClient.logger.info("Waiting for job id #{job_id}...")
+
       while (job_status = get_job_status(job_id)) !~ /#{JOB_STATUS_ERROR}|#{JOB_STATUS_COMPLETE}|#{JOB_STATUS_CANCELED}/
         SilverpopClient.logger.info("Job ID #{job_id} had status #{job_status}; sleeping #{SilverpopClient.seconds_between_job_status_polling} seconds")
         sleep(SilverpopClient.seconds_between_job_status_polling)
