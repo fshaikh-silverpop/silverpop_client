@@ -253,7 +253,7 @@ module SilverpopClient
     def wait_for_job_completion(job_id)
       SilverpopClient.logger.info("Waiting for job id #{job_id}...")
 
-      while (job_status = get_job_status(job_id)) !~ /#{JOB_STATUS_ERROR}|#{JOB_STATUS_COMPLETE}|#{JOB_STATUS_CANCELED}/
+      while (job_status = get_job_status(job_id)) !~ /#{JOB_STATUS_ERROR}|#{JOB_STATUS_COMPLETE}|#{JOB_STATUS_CANCELED}|#{JOB_STATUS_UNKNOWN}/
         SilverpopClient.logger.info("Job ID #{job_id} had status #{job_status}; sleeping #{SilverpopClient.seconds_between_job_status_polling} seconds")
         sleep(SilverpopClient.seconds_between_job_status_polling)
       end
