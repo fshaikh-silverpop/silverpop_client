@@ -13,6 +13,7 @@ module SilverpopClient
                                     :silverpop_ftp_port,
                                     :silverpop_ftp_path,
                                     :seconds_between_job_status_polling,
+                                    :email_address_for_notifications,
                                     :logger ].freeze
 
     attr_accessor *VALID_CONFIG_KEYS
@@ -30,6 +31,8 @@ module SilverpopClient
     DEFAULT_SILVERPOP_FTP_PATH =      '/download'
 
     DEFAULT_SECONDS_BETWEEN_JOB_STATUS_POLLING = 60
+
+    DEFAULT_EMAIL_ADDRESS_FOR_NOTIFICATIONS = nil
 
     DEFAULT_SILVERPOP_LIST_ID =       nil
 
@@ -54,9 +57,11 @@ module SilverpopClient
       self.silverpop_transact_path =  DEFAULT_SILVERPOP_TRANSACT_PATH
       self.silverpop_transact_port =  DEFAULT_SILVERPOP_TRANSACT_PORT
 
-      self.silverpop_list_id =        DEFAULT_SILVERPOP_LIST_ID
-
       self.seconds_between_job_status_polling = DEFAULT_SECONDS_BETWEEN_JOB_STATUS_POLLING
+
+      self.email_address_for_notifications = DEFAULT_EMAIL_ADDRESS_FOR_NOTIFICATIONS
+
+      self.silverpop_list_id =        DEFAULT_SILVERPOP_LIST_ID
 
       # If used from within a Rails application, you might want to set the logger to Rails.logger
       self.logger =                   Logger.new(STDERR)
