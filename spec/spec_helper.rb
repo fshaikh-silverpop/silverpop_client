@@ -26,14 +26,14 @@ end
 
 def successful_request_raw_recipient_export_xml
   xml = Builder::XmlMarkup.new
-  xml_base {|xml|
+  SilverpopClient::XmlGenerators.xml_base {|xml|
     xml.RawRecipientDataExport {
       xml.EVENT_DATE_START("11/01/2012")
       xml.EVENT_DATE_END("11/02/2012")
       xml.EXPORT_FORMAT(0)
       xml.MOVE_TO_FTP
-      xml.EMAIL("test")
       xml.ALL_EVENT_TYPES
+      xml.EMAIL("test@test.com")
     }
   }
 end

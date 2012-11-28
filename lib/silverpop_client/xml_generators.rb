@@ -79,7 +79,7 @@ module SilverpopClient
             xml.EXPORT_FORMAT(0)
             xml.MOVE_TO_FTP
             xml.ALL_EVENT_TYPES
-            xml.EMAIL(email_address_for_notifications) if SilverpopClient.email_address_for_notifications
+            xml.EMAIL(SilverpopClient.email_address_for_notifications) if SilverpopClient.email_address_for_notifications
           }
         }
       end

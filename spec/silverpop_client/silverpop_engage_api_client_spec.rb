@@ -72,6 +72,11 @@ describe SilverpopClient::EngageApiClient do
   end
 
   describe '.request_raw_recipient_report' do
+    it 'should build the correct XML request' do
+      SilverpopClient.email_address_for_notifications = "test@test.com"
+      SilverpopClient::XmlGenerators.xml_for_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2)).should == successful_request_raw_recipient_export_xml
+    end
+
     it 'should send the request correctly' do
       report_request_xml = SilverpopClient::XmlGenerators.xml_for_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2))
 
