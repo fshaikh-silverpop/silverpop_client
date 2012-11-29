@@ -125,6 +125,7 @@ module SilverpopClient
       if status == JOB_STATUS_CANCELED
         SilverpopClient.logger.warn("Job #{job_id} was canceled!")
       elsif status == JOB_STATUS_COMPLETE
+        FileUtils.mkdir_p(output_path)
         FtpRetrieval.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
       end
     end
@@ -164,6 +165,7 @@ module SilverpopClient
       output_filename = File.join(output_path, "silverpop_sent_mailings_#{@account_name ? @account_name + "_" : ""}#{start_date.strftime('%Y%m%d')}_to_#{end_date.strftime('%Y%m%d')}.csv")
 
       csv_doc = request_sent_mailings_for_org(start_date, end_date)
+      FileUtils.mkdir_p(output_path)
       File.open(output_filename, "w") {|f| f.write(csv_doc.join("\n"))}
     end
 

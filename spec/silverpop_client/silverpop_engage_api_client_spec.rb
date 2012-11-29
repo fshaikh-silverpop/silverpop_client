@@ -8,6 +8,8 @@ describe SilverpopClient::EngageApiClient do
     @test_password = "test"
     @client = SilverpopClient::EngageApiClient.new(@test_username, @test_password)
     @login_request_xml = SilverpopClient::XmlGenerators.xml_for_login(@test_username, @test_password)
+    
+    @output_path = "/data"
   end
 
   it 'should instantiate' do
@@ -36,7 +38,6 @@ describe SilverpopClient::EngageApiClient do
 
   describe '.request_sent_mailings_for_org' do
     before :all do
-      @output_path = "."
 
       @start_date = Date.new(2011, 1, 1)
       @end_date =  Date.new(2011, 1, 15)
@@ -64,6 +65,7 @@ describe SilverpopClient::EngageApiClient do
       @client.should_receive(:logout).once.and_return(successful_logout_xml)
 
       file = mock('file')
+      FileUtils.should_receive(:mkdir_p).with(@output_path)
       File.should_receive(:open).with(File.join(@output_path, "silverpop_sent_mailings__20110101_to_20110115.csv"), "w").and_yield(file)
       file.should_receive(:write).with(silverpop_mailing_data_csv.join("\n"))
 
@@ -90,9 +92,10 @@ describe SilverpopClient::EngageApiClient do
     end
 
     it 'should attempt the download' do
-      download_args = [@test_username, @test_password, "some_filename.zip", "/data"]
+      download_args = [@test_username, @test_password, "some_filename.zip", @output_path]
       @client.should_receive(:request_raw_recipient_data_export).and_return("some_filename.zip")
       @client.should_receive(:wait_for_job_completion).and_return(SilverpopClient::EngageApiClient::JOB_STATUS_COMPLETE)
+      FileUtils.should_receive(:mkdir_p).with(@output_path)
       SilverpopClient::FtpRetrieval.should_receive(:download_report_from_silverpop_ftp).with(*download_args).and_return("/data/some_filename.zip")
 
       @client.request_and_retrieve_raw_recipient_data_export_report(Date.new(2012,5,1), Date.new(2012,5,1), "/data")

@@ -1,3 +1,3 @@
 module SilverpopClient
-  VERSION = "0.0.2.1"
+  VERSION = "0.0.4.2"
 end
