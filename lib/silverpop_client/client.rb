@@ -22,19 +22,19 @@ module SilverpopClient
     ##
     # Updates records in the Silverpop mailing list for hashes passed in +array_of_contact_hashes+
     #
-    # Returns an array of contact hashes for all contacts that were successfully updated
+    # Returns an array of contact hashes for all contacts that were NOT successfully updated
 
     def update_contacts(array_of_contact_hashes)
       response_xml = post_to_silverpop_api(XmlGenerators.xml_for_add_recipient(array_of_contact_hashes))
 
-      successfully_updated = []
+      not_successfully_updated = []
 
       error_indices = handle_response_errors(response_xml)
       array_of_contact_hashes.each_with_index do |hsh, i|
-        successfully_updated << hsh unless error_indices.include?(i)
+        not_successfully_updated << hsh if error_indices.include?(i)
       end
 
-      successfully_updated
+      not_successfully_updated
     end
     alias_method :update_contact, :update_contacts
 

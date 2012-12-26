@@ -32,12 +32,12 @@ describe SilverpopClient::Client do
     describe 'it should post the update contacts XML to silverpop' do
       it 'should return the correct array when all updates were successful' do
         @client.should_receive(:post_to_silverpop_api).with(update_sample_array_of_contact_hashes_xml).once.and_return(silverpop_add_recipient_response_xml(3, []))
-        @client.update_contacts(sample_array_of_contact_hashes).should == sample_array_of_contact_hashes
+        @client.update_contacts(sample_array_of_contact_hashes).should == []
       end
 
       it 'should return the correct array when one update failed' do
         @client.should_receive(:post_to_silverpop_api).with(update_sample_array_of_contact_hashes_xml).once.and_return(silverpop_add_recipient_response_xml(3, [0]))
-        @client.update_contacts(sample_array_of_contact_hashes).should == sample_array_of_contact_hashes[1..2]
+        @client.update_contacts(sample_array_of_contact_hashes).should == [sample_array_of_contact_hashes[0]]
       end
     end
   end
