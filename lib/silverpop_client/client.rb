@@ -34,6 +34,11 @@ module SilverpopClient
         not_successfully_updated << hsh if error_indices.include?(i)
       end
 
+      if !not_successfully_updated.empty?
+        SilverpopClient.logger.error("Error updating some contacts, XML for these contacts:")
+        SilverpopClient.logger.error(XmlGenerators.xml_for_add_recipient(not_successfully_updated))
+      end
+
       not_successfully_updated
     end
     alias_method :update_contact, :update_contacts
