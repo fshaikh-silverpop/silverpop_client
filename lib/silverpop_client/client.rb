@@ -102,6 +102,7 @@ module SilverpopClient
         SilverpopClient.logger.debug("Posting #{data} to #{path}")
         response = @http.start {|http| http.post(path, "xml=#{data}", @headers) }
         SilverpopClient.logger.debug("Response: #{response.pretty_inspect}")
+        SilverpopClient.logger.debug("Response Body: #{response.body.pretty_inspect}")
         response.body
       rescue Exception => ex
         SilverpopClient.logger.error("post_to_silverpop_api exception!\n#{ex}")
