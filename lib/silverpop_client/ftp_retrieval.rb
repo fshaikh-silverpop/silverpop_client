@@ -22,7 +22,7 @@ module SilverpopClient
       rescue Exception => e
         SilverpopClient.logger.error('SFTP exception: %s' % e)
         SilverpopClient.logger.error('Source: %s' % e.backtrace)
-        SilverpopClient.logger.errpr('Message: %s' % e.message)
+        SilverpopClient.logger.error('Message: %s' % e.message)
       end
 
       local_filename
