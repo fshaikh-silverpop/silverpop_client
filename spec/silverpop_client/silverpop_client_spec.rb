@@ -71,6 +71,18 @@ describe SilverpopClient::Client do
       end
     end
 
+    describe '.email_address_exists?' do
+      it 'should return true if user exists' do
+        @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_select_recipient_data(@test_email)).once.and_return(mailing_info_xml)
+        @client.email_address_exists?(@test_email).should be_true
+      end
+
+      it 'should return false if user is not found' do
+        @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_select_recipient_data(@test_email)).once.and_return(failure_message)
+        @client.email_address_exists?(@test_email).should be_false
+      end
+    end
+
     describe '.opt_out_contact' do
       it 'should send the xml to opt them out' do
         @client.should_receive(:post_to_silverpop_api).with(SilverpopClient::XmlGenerators.xml_for_opt_out_recipient(@test_email)).once.and_return(success_message)
