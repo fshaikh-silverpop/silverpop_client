@@ -67,6 +67,13 @@ module SilverpopClient
     end
 
     ##
+    # Checks that a given user exists in silverpop's list
+
+    def email_address_exists?(email)
+      result_successful?(get_recipient_data(email)) rescue false
+    end
+
+    ##
     # Notify silverpop that +email+ has opted out
 
     def opt_out_contact(email)
