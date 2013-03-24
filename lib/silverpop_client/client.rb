@@ -103,18 +103,13 @@ module SilverpopClient
     # Returns the XML response, or nil in case of exception.
 
     def post(path, data)
-      begin
-        raise 'Silverpop path not set!' if path.blank?
-        @headers["Content-length"] = data.size.to_s
-        SilverpopClient.logger.debug("Posting #{data} to #{path}")
-        response = @http.start {|http| http.post(path, "xml=#{data}", @headers) }
-        SilverpopClient.logger.debug("Response: #{response.pretty_inspect}")
-        SilverpopClient.logger.debug("Response Body: #{response.body.pretty_inspect}")
-        response.body
-      rescue Exception => ex
-        SilverpopClient.logger.error("post_to_silverpop_api exception!\n#{ex}")
-        nil
-      end
+      raise 'Silverpop path not set!' if path.blank?
+      @headers["Content-length"] = data.size.to_s
+      SilverpopClient.logger.debug("Posting #{data} to #{path}")
+      response = @http.start {|http| http.post(path, "xml=#{data}", @headers) }
+      SilverpopClient.logger.debug("Response: #{response.pretty_inspect}")
+      SilverpopClient.logger.debug("Response Body: #{response.body.pretty_inspect}")
+      response.body
     end
 
     ##
