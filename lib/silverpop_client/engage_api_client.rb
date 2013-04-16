@@ -156,8 +156,8 @@ module SilverpopClient
     #
     # Returns the full path of the downloaded file
 
-    def request_and_retrieve_raw_recipient_data_export_report(start_date, end_date, output_path)
-      filename = request_raw_recipient_data_export(start_date, end_date)
+    def request_and_retrieve_raw_recipient_data_export_report(start_date, end_date, output_path, event_types=:all)
+      filename = request_raw_recipient_data_export(start_date, end_date, event_types)
       job_id = @data_job_ids.last
 
       begin
