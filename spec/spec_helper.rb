@@ -57,6 +57,20 @@ def successful_request_raw_recipient_export_xml
   }
 end
 
+def successful_request_raw_recipient_export_optouts_xml
+  xml = Builder::XmlMarkup.new
+  SilverpopClient::XmlGenerators.xml_base {|xml|
+    xml.RawRecipientDataExport {
+      xml.EVENT_DATE_START("11/01/2012")
+      xml.EVENT_DATE_END("11/02/2012")
+      xml.EXPORT_FORMAT(0)
+      xml.MOVE_TO_FTP
+      xml.OPTOUTS
+      xml.EMAIL("test@test.com")
+    }
+  }
+end
+
 def successful_request_raw_recipient_export_response_xml
   "<Envelope><Body><RESULT><SUCCESS>TRUE</SUCCESS><MAILING><JOB_ID>72649</JOB_ID><FILE_PATH>15167_20041213100410_track.zip</FILE_PATH></MAILING></RESULT></Body></Envelope>"
 end
