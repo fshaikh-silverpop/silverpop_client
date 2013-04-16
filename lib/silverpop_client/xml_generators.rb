@@ -90,14 +90,46 @@ module SilverpopClient
         }
       end
 
-      def xml_for_raw_recipient_data_export(start_date, end_date)
+      ##
+      # event_types is either the symbol :all or it is some subset of the available silverpop events.
+      #
+      # As of 2013-04-16 the available event types were:
+      #
+      # SENT
+      # SUPPRESSED
+      # OPENS
+      # CLICKS
+      # OPTINS
+      # OPTOUTS
+      # FORWARDS
+      # ATTACHMENTS
+      # CONVERSIONS
+      # CLICKSTREAMS
+      # HARD_BOUNCES
+      # SOFT_BOUNCES
+      # REPLY_ABUSE
+      # REPLY_COA (change of address)
+      # REPLY_OTHER
+      # MAIL_BLOCKS
+      # MAILING_RESTRICTIONS
+      # SMS_ERROR
+      # SMS_REJECT
+      # SMS_OPTOUT
+
+      def xml_for_raw_recipient_data_export(start_date, end_date, event_types=:all)
         xml_base {|xml|
           xml.RawRecipientDataExport {
             xml.EVENT_DATE_START(start_date.strftime("%m/%d/%Y"))
             xml.EVENT_DATE_END(end_date.strftime("%m/%d/%Y"))
             xml.EXPORT_FORMAT(0)
             xml.MOVE_TO_FTP
-            xml.ALL_EVENT_TYPES
+            if event_types == :all
+              xml.ALL_EVENT_TYPES
+            else
+              event_types.each do |event_type|
+                xml.__send__(event_type.upcase.to_sym)
+              end
+            end
             xml.EMAIL(SilverpopClient.email_address_for_notifications) if SilverpopClient.email_address_for_notifications
           }
         }

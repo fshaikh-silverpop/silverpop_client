@@ -99,8 +99,34 @@ module SilverpopClient
     #
     # Returns the filename silverpop will write the report out to on their FTP server
     # Populates the job id in data_job_ids
+    #
+    # +event_types+ is either the symbol :all or it is some subset of the available silverpop events.
+    #
+    # As of 2013-04-16 the available event types were:
+    #
+    # SENT
+    # SUPPRESSED
+    # OPENS
+    # CLICKS
+    # OPTINS
+    # OPTOUTS
+    # FORWARDS
+    # ATTACHMENTS
+    # CONVERSIONS
+    # CLICKSTREAMS
+    # HARD_BOUNCES
+    # SOFT_BOUNCES
+    # REPLY_ABUSE
+    # REPLY_COA (change of address)
+    # REPLY_OTHER
+    # MAIL_BLOCKS
+    # MAILING_RESTRICTIONS
+    # SMS_ERROR
+    # SMS_REJECT
+    # SMS_OPTOUT
 
-    def request_raw_recipient_data_export(start_date, end_date)
+
+    def request_raw_recipient_data_export(start_date, end_date, event_types=:all)
       filename = nil
 
       SilverpopClient.logger.info("Requesting raw recipient data export from silverpop from #{start_date} to #{end_date}...")
@@ -108,7 +134,8 @@ module SilverpopClient
       begin
         login unless logged_in?
 
-        result = post_to_silverpop_engage_api(XmlGenerators.xml_for_raw_recipient_data_export(start_date, end_date))
+        result = post_to_silverpop_engage_api(XmlGenerators.xml_for_raw_recipient_data_export(start_date, end_date, event_types))
+
         if result_successful?(result)
           filename = Hpricot(result).search("/Envelope/Body/RESULT/MAILING/FILE_PATH").inner_text
           data_job_ids << Hpricot(result).search("/Envelope/Body/RESULT/MAILING/JOB_ID").inner_text

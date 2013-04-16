@@ -93,9 +93,14 @@ describe SilverpopClient::EngageApiClient do
   end
 
   describe '.request_raw_recipient_report' do
-    it 'should build the correct XML request' do
+    it 'should build the correct XML request for all events' do
       SilverpopClient.email_address_for_notifications = "test@test.com"
       SilverpopClient::XmlGenerators.xml_for_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2)).should == successful_request_raw_recipient_export_xml
+    end
+
+    it 'should build the correct XML request for opt out events' do
+      SilverpopClient.email_address_for_notifications = "test@test.com"
+      SilverpopClient::XmlGenerators.xml_for_raw_recipient_data_export(Date.new(2012,11,1), Date.new(2012,11,2), ["optouts"]).should == successful_request_raw_recipient_export_optouts_xml
     end
 
     it 'should send the request correctly' do

@@ -18,10 +18,35 @@
 #############################################################################################
 
 
+==========================================================================================
 
 
 This gem is intended to provide a clean Ruby 1.9 interface to Silverpop's mailing APIs for
 
     1. Managing a mailing list in Silverpop - users and all of their properties.
     2. Making requests to the Silverpop Engage API to pull reports.
-    3. Enabling sending of transactional emails.
+
+
+==========================================================================================
+
+
+Basic startup usage looks like this:
+
+    # Set the log location
+    SilverpopClient.logger = Reports::ReportAuditLogger.new(some_log_location)
+
+    # Set the log level
+    SilverpopClient.logger.level = Logger::INFO
+
+    # Set the list id
+    SilverpopClient.silverpop_list_id = some_list_id
+
+    # Instantiate client
+    @client = SilverpopClient::Client.new(:account_name => "some_account_name")
+
+
+==========================================================================================
+
+Run all specs with
+
+$ bundle exec rake test
