@@ -120,7 +120,7 @@ describe SilverpopClient::EngageApiClient do
       @client.should_receive(:request_raw_recipient_data_export).and_return("some_filename.zip")
       @client.should_receive(:wait_for_job_completion).and_return(SilverpopClient::EngageApiClient::JOB_STATUS_COMPLETE)
       FileUtils.should_receive(:mkdir_p).with(@output_path)
-      SilverpopClient::FtpRetrieval.should_receive(:download_report_from_silverpop_ftp).with(*download_args).and_return("/data/some_filename.zip")
+      SilverpopClient::FtpTransport.should_receive(:download_report_from_silverpop_ftp).with(*download_args).and_return("/data/some_filename.zip")
 
       @client.request_and_retrieve_raw_recipient_data_export_report(Date.new(2012,5,1), Date.new(2012,5,1), "/data")
     end

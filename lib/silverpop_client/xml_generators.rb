@@ -68,6 +68,19 @@ module SilverpopClient
         }
       end
 
+      def xml_for_list_import(map_file_name, csv_file_name)
+        xml_base {|xml|
+          xml.ImportList {
+            xml.MAP_FILE {
+              xml.cdata!(map_file_name)
+            }
+            xml.SOURCE_FILE {
+              xml.cdata!(csv_file_name)
+            }
+          }
+        }
+      end
+
       def xml_for_select_recipient_data(email)
         xml_base {|xml|
           xml.SelectRecipientData {

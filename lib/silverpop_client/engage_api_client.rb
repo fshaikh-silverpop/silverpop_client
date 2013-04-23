@@ -152,6 +152,36 @@ module SilverpopClient
     end
 
     ##
+    # Creates the request for the csv file import using map file +map_filename+ for csv file  +csv_filename+
+    #
+    # Returns the job_id
+
+
+    def request_csv_list_import(map_filename, csv_filename)
+
+      SilverpopClient.logger.info("Requesting csv file import using #{map_filename} for #{csv_filename}...")
+
+      begin
+        login unless logged_in?
+
+        result = post_to_silverpop_engage_api(XmlGenerators.xml_for_list_import(map_filename, csv_filename))
+
+        if result_successful?(result)
+          job_id = Hpricot(result).search("/Envelope/Body/RESULT/JOB_ID").inner_text
+          data_job_ids << job_id
+          SilverpopClient.logger.info("Successfully requested csv file import using #{map_filename} for #{csv_filename}, job_id is #{data_job_ids.last}...")
+        else
+          raise "Error requesting csv file import, result is #{result.pretty_inspect}..."
+        end
+      ensure
+        logout
+      end
+
+      job_id
+
+    end
+
+    ##
     # Creates the request for the data export from +start_date+ to +end_date+ and writes the output to +output_path+
     #
     # Returns the full path of the downloaded file
@@ -172,7 +202,7 @@ module SilverpopClient
         SilverpopClient.logger.warn("Job #{job_id} was canceled!")
       elsif status == JOB_STATUS_COMPLETE
         FileUtils.mkdir_p(output_path)
-        FtpRetrieval.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
+        FtpTransport.download_report_from_silverpop_ftp(@username, @password, filename, output_path)
       end
     end
 

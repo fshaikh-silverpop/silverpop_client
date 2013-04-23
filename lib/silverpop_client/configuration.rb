@@ -30,7 +30,8 @@ module SilverpopClient
                                     :silverpop_list_id,
                                     :silverpop_ftp_server,
                                     :silverpop_ftp_port,
-                                    :silverpop_ftp_path,
+                                    :silverpop_ftp_upload_path,
+                                    :silverpop_ftp_download_path,
                                     :seconds_between_job_status_polling,
                                     :email_address_for_notifications,
                                     :logger ].freeze
@@ -47,7 +48,8 @@ module SilverpopClient
 
     DEFAULT_SILVERPOP_FTP_SERVER =    "transfer3.silverpop.com"
     DEFAULT_SILVERPOP_FTP_PORT =      22
-    DEFAULT_SILVERPOP_FTP_PATH =      '/download'
+    DEFAULT_SILVERPOP_FTP_UPLOAD_PATH =      '/upload'
+    DEFAULT_SILVERPOP_FTP_DOWNLOAD_PATH =      '/download'
 
     DEFAULT_SECONDS_BETWEEN_JOB_STATUS_POLLING = 60
 
@@ -70,7 +72,8 @@ module SilverpopClient
 
       self.silverpop_ftp_server =     DEFAULT_SILVERPOP_FTP_SERVER
       self.silverpop_ftp_port =       DEFAULT_SILVERPOP_FTP_PORT
-      self.silverpop_ftp_path =       DEFAULT_SILVERPOP_FTP_PATH
+      self.silverpop_ftp_upload_path =       DEFAULT_SILVERPOP_FTP_UPLOAD_PATH
+      self.silverpop_ftp_download_path =       DEFAULT_SILVERPOP_FTP_DOWNLOAD_PATH
 
       self.silverpop_transact_url =   DEFAULT_SILVERPOP_TRANSACT_URL
       self.silverpop_transact_path =  DEFAULT_SILVERPOP_TRANSACT_PATH
@@ -88,4 +91,3 @@ module SilverpopClient
     end
   end
 end
-
