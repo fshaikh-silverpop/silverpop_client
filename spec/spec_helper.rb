@@ -19,6 +19,21 @@
 
 require 'silverpop_client'
 
+def successful_list_import_xml
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Envelope><Body><ImportList><MAP_FILE><![CDATA[test_map_file.xml]]></MAP_FILE><SOURCE_FILE><![CDATA[test_csv_file.csv]]></SOURCE_FILE></ImportList></Body></Envelope>"
+end
+
+def successful_list_import_response_xml
+  "<Envelope>
+    <Body>
+      <RESULT>
+        <SUCCESS>TRUE</SUCCESS>
+        <JOB_ID>108518</JOB_ID>
+      </RESULT>
+    </Body>
+  </Envelope>"
+end
+
 def successful_login_xml
   xml = Builder::XmlMarkup.new
   xml.Envelope {

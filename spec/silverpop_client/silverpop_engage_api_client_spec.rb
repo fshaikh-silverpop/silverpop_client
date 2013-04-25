@@ -126,6 +126,24 @@ describe SilverpopClient::EngageApiClient do
     end
   end
 
+  describe '.request_csv_list_import' do
+    it 'should build the correct XML request for the list import' do
+      SilverpopClient::XmlGenerators.xml_for_list_import("test_map_file.xml","test_csv_file.csv").should == successful_list_import_xml
+    end
+
+    it 'should send the request correctly' do
+      list_import_xml = SilverpopClient::XmlGenerators.xml_for_list_import("test_map_file.xml","test_csv_file.csv")
+
+      @client.should_receive(:login).once
+      @client.should_receive(:post_to_silverpop_engage_api).with(list_import_xml).once.and_return(successful_list_import_response_xml)
+      @client.should_receive(:logout)
+
+      jobid = @client.request_csv_list_import("/path/","test_map_file.xml","test_csv_file.csv")
+      jobid.should == "108518"
+    end
+
+  end
+
   describe '.get_job_status' do
     before :all do
       @job_id = 1234

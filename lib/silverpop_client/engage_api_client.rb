@@ -157,12 +157,15 @@ module SilverpopClient
     # Returns the job_id
 
 
-    def request_csv_list_import(map_filename, csv_filename)
+    def request_csv_list_import(local_filepath, map_filename, csv_filename)
 
       SilverpopClient.logger.info("Requesting csv file import using #{map_filename} for #{csv_filename}...")
 
       begin
         login unless logged_in?
+
+        FtpTransport.upload_file_to_silverpop_ftp(@username, @password, local_filepath, map_filename)
+        FtpTransport.upload_file_to_silverpop_ftp(@username, @password, local_filepath, csv_filename)
 
         result = post_to_silverpop_engage_api(XmlGenerators.xml_for_list_import(map_filename, csv_filename))
 
